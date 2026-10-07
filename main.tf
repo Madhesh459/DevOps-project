@@ -125,7 +125,7 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
   key_name      = "devops-key"
 
-  subnet_id                   = aws_subnet.pubcclic.id
+  subnet_id                   = aws_subnet.public.id
   vpc_security_group_ids      = [aws_security_group.ec2.id]
   associate_public_ip_address = true
 
