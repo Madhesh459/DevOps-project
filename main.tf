@@ -129,18 +129,14 @@ resource "aws_instance" "web" {
   vpc_security_group_ids      = [aws_security_group.ec2.id]
   associate_public_ip_address = true
 
-  user_data = <<-EOF
-              #!/bin/bash
-
-              apt update -y
-
-              apt install -y docker.io
-
-              systemctl start docker
-              systemctl enable docker
-
-              usermod -aG docker ubuntu
-              EOF
+user_data = <<-EOF
+  #!/bin/bash
+  dnf update -y
+  dnf install -y docker
+  systemctl start docker
+  systemctl enable docker
+  usermod -aG docker ec2-user
+EOF
 
   tags = {
     Name = "devops-ec2"
