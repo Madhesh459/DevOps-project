@@ -121,11 +121,11 @@ resource "aws_security_group" "ec2" {
 # -------------------------
 
 resource "aws_instance" "web" {
-  ami           = "ami-0f918f7e67a3323f0"
+  ami           = "ami-0a717262ea9adab3f"
   instance_type = "t3.micro"
   key_name      = "devops-key"
 
-  subnet_id                   = aws_subnet.public.id
+  subnet_id                   = aws_subnet.pubcclic.id
   vpc_security_group_ids      = [aws_security_group.ec2.id]
   associate_public_ip_address = true
 
