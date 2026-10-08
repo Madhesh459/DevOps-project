@@ -6,15 +6,9 @@ terraform {
     }
   }
 }
-
 provider "aws" {
   region = "ap-south-2"
 }
-
-# -------------------------
-# VPC
-# -------------------------
-
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
@@ -22,10 +16,6 @@ resource "aws_vpc" "main" {
     Name = "devops-vpc"
   }
 }
-
-# -------------------------
-# Public Subnet
-# -------------------------
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
@@ -38,10 +28,6 @@ resource "aws_subnet" "public" {
   }
 }
 
-# -------------------------
-# Internet Gateway
-# -------------------------
-
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -49,10 +35,6 @@ resource "aws_internet_gateway" "main" {
     Name = "devops-igw"
   }
 }
-
-# -------------------------
-# Route Table
-# -------------------------
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -66,26 +48,15 @@ resource "aws_route_table" "public" {
     Name = "devops-public-route-table"
   }
 }
-
-# -------------------------
-# Route Table Association
-# -------------------------
-
 resource "aws_route_table_association" "public" {
   subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
-
-# -------------------------
-# Security Group
-# -------------------------
-
 resource "aws_security_group" "ec2" {
   name        = "devops-ec2-sg"
   description = "Security group for DevOps EC2"
   vpc_id      = aws_vpc.main.id
 
-  # SSH
   ingress {
     description = "SSH"
     from_port   = 22
@@ -93,8 +64,6 @@ resource "aws_security_group" "ec2" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  # HTTP
   ingress {
     description = "HTTP"
     from_port   = 80
@@ -102,23 +71,16 @@ resource "aws_security_group" "ec2" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  # Allow all outbound traffic
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
   tags = {
     Name = "devops-ec2-sg"
   }
 }
-
-# -------------------------
-# EC2 Instance
-# -------------------------
 
 resource "aws_instance" "web" {
   ami           = "ami-0a717262ea9adab3f"
